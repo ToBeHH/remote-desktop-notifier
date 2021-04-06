@@ -1,0 +1,40 @@
+{
+  "name": "remote-desktop-notifier",
+  "version": "1.0.0",
+  "description": "Show notifications which are sent by a remote machine",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "format": "yarn format:js && yarn format:md",
+    "format:js": "prettier --write './*.{js,jsx}'",
+    "format:md": "prettier --prose-wrap always --write './*.md'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ToBeHH/remote-desktop-notifier"
+  },
+  "homepage": "https://github.com/ToBeHH/remote-desktop-notifier",
+  "author": "Tobias Schulz-Hess",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ToBeHH/remote-desktop-notifier/issues"
+  },
+  "dependencies": {
+    "node-notifier": "^9.0.1"
+  },
+  "devDependencies": {
+    "husky": ">=4",
+    "lint-staged": ">=10",
+    "prettier": "^2.2.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": "prettier --write",
+    "*.md": "prettier --prose-wrap always --write",
+    "*.css": "prettier --write"
+  }
+}
