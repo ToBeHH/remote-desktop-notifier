@@ -20,6 +20,7 @@ const requestListener = function (req, res) {
   });
 
   res.writeHead(200);
+  res.setHeader("Content-Type", "application/json");
   res.end("{'ok': true}");
 };
 
