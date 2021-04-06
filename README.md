@@ -27,4 +27,21 @@ PORT=12345 yarn start
 
 # Sending messages to be displayed
 
-TBD.
+You send the data just as request parameters. For example on the command line,
+you can do:
+
+```bash
+curl "http://localhost:16333/?summary=Eingehender%20Anruf&body=von%20123"
+```
+
+In OpenHAB you can use the following code in a rule:
+
+```xtext
+import java.net.URLEncoder
+
+...
+
+val Sting notifyPayload = "summary=Eingehender%20Anruf&body=von%20" + URLEncoder::encode(callerName, "UTF-8") + "&timeout=0"
+
+sendHttpPostRequest("http://192.168.1.100:16333", "application/x-www-form-urlencoded", notifyPayload, 3000)
+```
