@@ -20,11 +20,11 @@
     "url": "https://github.com/ToBeHH/remote-desktop-notifier/issues"
   },
   "dependencies": {
-    "node-notifier": "^9.0.1"
+    "node-notifier": "^10.0.1"
   },
   "devDependencies": {
     "husky": ">=4",
-    "lint-staged": ">=10",
+    "lint-staged": ">=13",
     "prettier": "^2.2.1"
   },
   "husky": {
