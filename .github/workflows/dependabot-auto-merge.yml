@@ -1,0 +1,50 @@
+# Automatically merges Dependabot pull requests.
+#
+# Security fixes and routine patch/minor version bumps are merged without
+# interaction. Major version bumps are left open on purpose.
+# If a merge cannot be completed, the job fails and opens an issue in this
+# repository, which is what generates a notification email.
+#
+# https://docs.github.com/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions
+
+name: Dependabot auto-merge
+
+on: pull_request
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+jobs:
+  auto-merge:
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Merge security, patch and minor updates
+        if: steps.metadata.outputs.update-type != 'version-update:semver-major'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          # Prefer auto-merge so that required status checks have to pass first.
+          # Fall back to a direct merge where auto-merge is unavailable.
+          gh pr merge --auto --squash "$PR_URL" || gh pr merge --squash "$PR_URL"
+
+      - name: Report a failed auto-merge
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh issue create \
+            --title "Dependabot auto-merge failed: $PR_TITLE" \
+            --body "The dependency update $PR_URL could not be merged automatically and needs manual review. Workflow run: $RUN_URL"
