@@ -27,6 +27,9 @@
     "lint-staged": ">=13",
     "prettier": "^2.2.1"
   },
+  "resolutions": {
+    "uuid": "^14.0.2"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
